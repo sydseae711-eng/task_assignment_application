@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TaskStatus {
+  TODO
+  DONE
+}
+
+model Developer {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  skills    DeveloperSkill[]
+  tasks     Task[]
+
+  @@map("developers")
+}
+
+model Skill {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  developers DeveloperSkill[]
+  tasks     TaskSkill[]
+
+  @@map("skills")
+}
+
+model DeveloperSkill {
+  developerId Int
+  skillId     Int
+  developer   Developer @relation(fields: [developerId], references: [id])
+  skill       Skill     @relation(fields: [skillId], references: [id])
+
+  @@id([developerId, skillId])
+  @@index([skillId])
+  @@map("developer_skills")
+}
+
+model Task {
+  id         Int            @id @default(autoincrement())
+  title      String
+  status     TaskStatus     @default(TODO)
+  developerId Int?
+  parentId   Int?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  developer  Developer?     @relation(fields: [developerId], references: [id])
+  parent     Task?          @relation("Subtasks", fields: [parentId], references: [id])
+  subtasks   Task[]         @relation("Subtasks")
+  skills     TaskSkill[]
+
+  @@index([developerId])
+  @@index([parentId])
+  @@map("tasks")
+}
+
+model TaskSkill {
+  taskId   Int
+  skillId  Int
+  task     Task   @relation(fields: [taskId], references: [id])
+  skill    Skill  @relation(fields: [skillId], references: [id])
+
+  @@id([taskId, skillId])
+  @@index([skillId])
+  @@map("task_skills")
+}
