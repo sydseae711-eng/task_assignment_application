@@ -89,7 +89,10 @@ npm run dev     # http://localhost:5173 — proxies /api to localhost:3000
 
 A small, high-signal unit test suite (28 tests) covers the core business rules — skill-assignment validation, the subtask Done-gating check, subtask depth/breadth limit checks, and LLM skill-name parsing on the backend; subtask-title validation and the task-list merge-update logic on the frontend. Deliberately scoped rather than exhaustive, given the assignment's time box — every test is a plain function call against plain data, no database, no mocking, no browser involved.
 
+The backend tests import `server/src/prismaClient.ts`, which in turn imports Prisma's generated client from `server/generated/prisma` — a build artifact, gitignored, not present on a fresh clone. Run `npx prisma generate` inside `server/` at least once before `npm test` (already covered above if you followed the Backend setup steps; a database connection is not required just to generate the client).
+
 ```bash
+cd server && npx prisma generate   # only needed once, or after schema.prisma changes
 cd server && npm test    # 19 tests, node --test
 cd client && npm test    # 9 tests, node --test via tsx
 ```
