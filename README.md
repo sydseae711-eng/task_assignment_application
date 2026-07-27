@@ -64,9 +64,10 @@ Create `server/.env`:
 ```
 DATABASE_URL=postgresql://postgres:mysecretpassword@localhost:5432/mydatabase?schema=public
 GEMINI_API_KEY=your_key_here
-# GEMINI_MODEL=gemini-3.5-flash-lite   (optional override)
-# MAX_SUBTASK_DEPTH=3                  (optional override)
-# MAX_SUBTASKS_PER_LEVEL=10            (optional override)
+# All optional, shown with their defaults — uncomment and edit only if you want a different value:
+# GEMINI_MODEL=gemini-3.5-flash-lite
+# MAX_SUBTASK_DEPTH=3
+# MAX_SUBTASKS_PER_LEVEL=10
 ```
 
 ```bash
